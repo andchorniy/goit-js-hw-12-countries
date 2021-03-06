@@ -11,7 +11,9 @@ const refs = {
 }
 
 refs.input.addEventListener('input', debounce(() => {
-   refs.input.value && fetchCountries(refs.input.value).then(hendlerCountryArray)
+    refs.input.value && fetchCountries(refs.input.value)
+        .then(hendlerCountryArray).catch(() => { PNotify.error('Country not found') })
+        
 }, 500)
 )
 
