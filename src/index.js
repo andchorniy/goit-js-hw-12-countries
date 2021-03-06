@@ -1,25 +1,39 @@
-
+import './styles.css';  
 import debounce from 'lodash.debounce'
+import PNotify from '../node_modules/pnotify/dist/es/PNotify';
 import fetchCountries from './api/fetchCountries'
+import markupCountryCard from './templates/country-card.hbs'
 
-let searchCountry = ''
-const inputRef = document.querySelector('#search');
-inputRef.addEventListener('input', debounce(() => {
-    searchCountry = inputRef.value
-    fetchCountries(searchCountry).then((result) => {
-        createMarkup(result)
-    })
+const refs = {
+    contryList: document.querySelector('.contry-list'),
+    contryWrapper: document.querySelector('.contry-wrapper'),
+    input: document.querySelector('#search')
+}
+
+refs.input.addEventListener('input', debounce(() => {
+   refs.input.value && fetchCountries(refs.input.value).then(hendlerCountryArray)
 }, 500)
 )
 
-function createMarkup(arr) { 
-    if (arr.length > 10) {
-        alert('Too match');
-    } else if (arr.length > 2 || arr.length < 10) {
-        console.log(arr);
-    } else { 
-        console.log(arr);
-    }
-    
+function hendlerCountryArray(arr) {
+    refs.contryList.innerHTML = ''
+    if (arr.length > 10 ) {
+        PNotify.error('Too many matches found. Please enter a more specific query!');
+    } else {
+        return createMarkup(arr);
+    }   
 }
+function createMarkup(arrayCountries) { 
+    if (arrayCountries.length >= 2 && arrayCountries.length < 10) {
+        refs.contryWrapper.innerHTML = ''
+         arrayCountries.map((contry) => {
+            refs.contryList.insertAdjacentHTML('beforeend', `<li class="list-item">${contry.name}</li>`)
+         })
+        
+    } else  { 
+        refs.contryWrapper.innerHTML = `${markupCountryCard(arrayCountries)}`
+    }
+}
+
+
 
