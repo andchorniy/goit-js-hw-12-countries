@@ -41,11 +41,11 @@ function createMarkup(arrayCountries) {
     }
 }
 
-refs.contryList.addEventListener('click', (e) => {
-    if (e.target === refs.button) {
-        refs.input.value = `${e.target.textContent}`
-        handlerData()
-    }
- })
+// refs.contryList.addEventListener('click', (e) => {
+//     if (e.target === refs.button) {
+//         refs.input.value = `${e.target.textContent}`
+//         handlerData()
+//     }
+//  })
 
 
