@@ -7,17 +7,21 @@ import markupCountryCard from './templates/country-card.hbs'
 const refs = {
     contryList: document.querySelector('.contry-list'),
     contryWrapper: document.querySelector('.contry-wrapper'),
-    input: document.querySelector('#search')
+    input: document.querySelector('#search'),
+    button: document.querySelector('.country-btn')
 }
 
-refs.input.addEventListener('input', debounce(() => {
-    refs.input.value && fetchCountries(refs.input.value)
-        .then(hendlerCountryArray).catch(() => { PNotify.error('Country not found') })
-        
-}, 500)
+refs.input.addEventListener('input', debounce( handlerData, 500)
 )
+function handlerData() {
+    refs.input.value.trim() && fetchCountries(refs.input.value.trim())
+        .then(handlerCountryArray)
+        .catch(() => { PNotify.error('Country not found') })
+        
+}
 
-function hendlerCountryArray(arr) {
+
+function handlerCountryArray(arr) {
     refs.contryList.innerHTML = ''
     if (arr.length > 10 ) {
         PNotify.error('Too many matches found. Please enter a more specific query!');
@@ -29,7 +33,7 @@ function createMarkup(arrayCountries) {
     if (arrayCountries.length >= 2 && arrayCountries.length < 10) {
         refs.contryWrapper.innerHTML = ''
          arrayCountries.map((contry) => {
-            refs.contryList.insertAdjacentHTML('beforeend', `<li class="list-item">${contry.name}</li>`)
+            refs.contryList.insertAdjacentHTML('beforeend', `<li class="list-item"><button class="country-btn">${contry.name}</button></li>`)
          })
         
     } else  { 
@@ -37,5 +41,11 @@ function createMarkup(arrayCountries) {
     }
 }
 
+refs.contryList.addEventListener('click', (e) => {
+    if (e.target === refs.button) {
+        refs.input.value = `${e.target.textContent}`
+        handlerData()
+    }
+ })
 
 
